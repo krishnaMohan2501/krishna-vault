@@ -5,11 +5,9 @@ date: 2026-05-15
 
 # When Your Architecture Is Smarter Than Your Product
 
-Early in my career, I sat in a design review for a product that had about 200 daily active users.
+Over-engineering rarely looks like a mistake when it is happening. It looks like thoroughness. It looks like preparation.
 
-The diagram had eleven services, three message queues, an event store, a dedicated notification orchestrator, and a plugin registry for "future extensibility." Someone had clearly had a great time designing it.
-
-Six months later, adding a new user field took two sprints, four PRs across three repos, and a deployment coordination call.
+The cost shows up later — when adding a simple field takes two sprints, or a routine deployment needs a coordination call.
 
 That is what over-engineering actually costs. Not the complexity itself — the friction it creates every single day after you ship it.
 
