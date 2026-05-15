@@ -1,8 +1,0 @@
-{
-  "index": "Overview",
-  "rest-api": "REST API",
-  "spring-security": "Spring Security",
-  "jpa-hibernate": "JPA & Hibernate",
-  "microservices": "Microservices",
-  "kubernetes": "Kubernetes"
-}
