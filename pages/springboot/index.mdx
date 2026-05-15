@@ -1,0 +1,29 @@
+---
+title: Spring Boot
+---
+
+# Spring Boot Notes
+
+## Topics
+
+| Topic | Description |
+|-------|-------------|
+| [REST API](/springboot/rest-api) | Controllers, request mapping, validation, error handling |
+| [Spring Security](/springboot/spring-security) | JWT, OAuth2, filters, role-based access |
+| [JPA & Hibernate](/springboot/jpa-hibernate) | Entities, relationships, JPQL, transactions |
+| [Microservices](/springboot/microservices) | Service discovery, API gateway, circuit breaker |
+| [Kubernetes](/springboot/kubernetes) | Deployments, services, helm charts |
+
+## Quick Annotations Reference
+
+```java
+@SpringBootApplication   // entry point
+@RestController          // HTTP controller
+@Service                 // business logic
+@Repository              // data access
+@Component               // generic bean
+@Autowired               // dependency injection
+@Transactional           // transaction boundary
+@Value("${prop}")        // inject property
+@ConfigurationProperties // bind config prefix
+```

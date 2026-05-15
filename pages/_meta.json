@@ -1,0 +1,10 @@
+{
+  "index": "Home",
+  "java": "Java",
+  "springboot": "Spring Boot",
+  "dsa": "DSA",
+  "system-design": "System Design",
+  "testing": "QA & Testing",
+  "interview": "Interview Prep",
+  "blog": "Blog"
+}

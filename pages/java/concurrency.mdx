@@ -1,0 +1,53 @@
+---
+title: Concurrency
+---
+
+# Concurrency in Java
+
+## Thread Lifecycle
+
+```
+NEW → RUNNABLE → RUNNING → BLOCKED/WAITING/TIMED_WAITING → TERMINATED
+```
+
+## ExecutorService
+
+```java
+ExecutorService executor = Executors.newFixedThreadPool(4);
+
+Future<String> future = executor.submit(() -> {
+    return "result";
+});
+
+String result = future.get();
+executor.shutdown();
+```
+
+## CompletableFuture (Java 8+)
+
+```java
+CompletableFuture.supplyAsync(() -> fetchUser(id))
+    .thenApply(user -> enrichUser(user))
+    .thenAccept(System.out::println)
+    .exceptionally(ex -> { log(ex); return null; });
+```
+
+## Synchronized vs Lock
+
+```java
+// synchronized
+synchronized(this) { count++; }
+
+// ReentrantLock - more control
+Lock lock = new ReentrantLock();
+lock.lock();
+try { count++; } finally { lock.unlock(); }
+```
+
+## Common Issues
+
+| Issue | Cause | Fix |
+|-------|-------|-----|
+| Race condition | Unsynchronized shared state | synchronized / AtomicInteger |
+| Deadlock | Circular lock dependency | Lock ordering, tryLock |
+| Starvation | Thread never gets CPU | Fair locks |

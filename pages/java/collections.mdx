@@ -1,0 +1,36 @@
+---
+title: Collections Framework
+---
+
+# Collections Framework
+
+## Complexity Cheat Sheet
+
+| Collection | Get | Add | Remove | Contains |
+|------------|-----|-----|--------|----------|
+| ArrayList | O(1) | O(1) amort. | O(n) | O(n) |
+| LinkedList | O(n) | O(1) | O(1) | O(n) |
+| HashMap | O(1) | O(1) | O(1) | O(1) |
+| TreeMap | O(log n) | O(log n) | O(log n) | O(log n) |
+| HashSet | - | O(1) | O(1) | O(1) |
+| PriorityQueue | O(1) peek | O(log n) | O(log n) | O(n) |
+
+## HashMap Internals
+
+- Array of `LinkedList` / `TreeNode` buckets
+- Hash collision → chaining (Java 8: treeify after 8 entries)
+- Default load factor: **0.75**, default capacity: **16**
+- Resizes (doubles) when `size > capacity * load_factor`
+
+```java
+Map<String, Integer> freq = new HashMap<>();
+freq.merge("key", 1, Integer::sum);  // elegant frequency counting
+```
+
+## When to Use What
+
+- **ArrayList** → random access, iteration
+- **LinkedList** → frequent insertions/deletions at ends
+- **HashMap** → key-value, O(1) average
+- **TreeMap** → sorted keys, range queries
+- **PriorityQueue** → top-K problems, Dijkstra

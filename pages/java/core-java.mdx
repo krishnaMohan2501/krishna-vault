@@ -1,0 +1,45 @@
+---
+title: Core Java
+---
+
+# Core Java
+
+> Add your notes here. Below is a starter template.
+
+## JVM Architecture
+
+- **ClassLoader** → loads `.class` files
+- **JIT Compiler** → compiles bytecode to native machine code at runtime
+- **Heap** → object allocation (Young Gen + Old Gen)
+- **Stack** → method call frames, local variables
+
+## String Pool
+
+```java
+String a = "hello";       // goes to string pool
+String b = new String("hello"); // goes to heap
+
+a == b        // false
+a.equals(b)   // true
+```
+
+## Generics
+
+```java
+public <T extends Comparable<T>> T max(T a, T b) {
+    return a.compareTo(b) > 0 ? a : b;
+}
+```
+
+## Exception Hierarchy
+
+```
+Throwable
+ ├── Error (OutOfMemoryError, StackOverflowError)
+ └── Exception
+      ├── RuntimeException (unchecked)
+      │    ├── NullPointerException
+      │    ├── ArrayIndexOutOfBoundsException
+      │    └── IllegalArgumentException
+      └── IOException (checked)
+```

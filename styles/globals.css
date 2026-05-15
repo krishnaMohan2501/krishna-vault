@@ -1,0 +1,12 @@
+html {
+  scroll-behavior: smooth;
+}
+
+.nextra-content {
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+code {
+  border-radius: 4px;
+}
