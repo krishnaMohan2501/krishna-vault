@@ -1,0 +1,137 @@
+---
+title: Spotting Over-Engineering
+---
+
+# Spotting Over-Engineering
+
+Over-engineering is when the cost of building and operating a system grows faster than the value or risk it is actually handling. You see a lot of "in case we need it someday" and very little "this solves a problem we have right now".
+
+Think about three axes:
+- **Complexity**
+- **Actual scale and risk**
+- **Team capacity**
+
+If complexity is far ahead of the other two, you are over-engineered.
+
+---
+
+## 1. Look at the diagram-to-requirement ratio
+
+Take your current requirements and compare them to the architecture diagram.
+
+**Smells that it is overdone:**
+1. The feature set is small, but the diagram has many services, message buses, and custom frameworks
+2. You have more infrastructure components than core business components
+3. Every basic concern has a separate service: auth service, user profile service, user-notes service, notification-orchestrator service — for a tiny product
+
+**Ask:** *"If this were rebuilt by a small startup in a month, would they draw this many boxes?"*
+
+If the diagram looks like a large tech company while the business problem is tiny, you have drifted into **architecture theater**.
+
+---
+
+## 2. Compare scale assumptions with reality
+
+Over-engineering often hides in imaginary scale.
+
+**Check:**
+1. Traffic: Are you really facing tens of thousands of RPS, or is it a few hundred at peak?
+2. Data: Do you truly need sharding on day one, or would a single well-tuned database last years?
+3. Teams: Do you have three teams or thirty? Did you split into many services even though only one team owns them all?
+
+**Rough heuristic:**
+- If one database with read replicas can handle your next 12–18 months, sharding early is probably overkill
+- If a single codebase with modular boundaries would be easy for your team size, many microservices is likely over-engineered
+
+---
+
+## 3. Watch for technology tourism
+
+Sometimes over-engineering comes from wanting to play with tools instead of solving problems.
+
+**Red flags:**
+1. "We need a message bus" — without any clear need for async workflows
+2. "Let's go event-sourced" — even though the business does not need full event history or replays
+3. "We should try CQRS" — for a simple CRUD-style backend
+4. Every service has its own database type "optimised" for its use case, making operations a nightmare
+
+**Ask for every extra technology:** *"What concrete failure or limitation does this remove for us in the next year?"*
+
+If nobody can answer clearly, that component is probably decorative.
+
+---
+
+## 4. Look at how often decisions reference the future over the present
+
+Over-engineering is often justified with "what if" and "one day" rather than concrete current needs.
+
+**Examples:**
+1. "One day we might need to support 10 different payment providers"
+2. "What if we need plug-and-play modules for third parties in 2 years"
+
+**Healthy forward thinking:**
+- Adds extension points where it is cheap
+- Keeps the current path simple
+
+**Over-engineering:**
+- Builds out complex plugin systems, abstraction layers, or super generic APIs long before you have a second implementation
+
+**Ask:** *"Do we have at least two real use cases that need this abstraction today?"*
+- If not, keep it straightforward and refactor when the second real use case appears.
+
+---
+
+## 5. Check how hard it is to explain the design in 5 minutes
+
+If you cannot explain the architecture to a competent engineer in five minutes and have them nod along, it is probably too clever for its own good.
+
+**Try this:**
+1. Explain the system on a whiteboard to a teammate who was not in the design meetings
+2. If you hear yourself saying "we added this layer in case we need X later" many times, or you see confusion on basic flows — you have complexity overhead
+
+A healthy design might be rich internally but still has a simple story at the top:
+
+> *"Requests come here, we do these three main things, we store it here, this part is cached."*
+
+---
+
+## 6. Look at change velocity — does the design slow you down?
+
+Over-engineering shows up as friction when you change things.
+
+**Signals:**
+1. Simple features require touching many services, repos, or configs
+2. Deployments are complicated, with many interdependent pipelines
+3. Local development is heavy: you need several containers and emulators to even run a basic flow
+
+**Ask:** *"How many steps does it take to add a simple field to a user profile end to end?"*
+
+If the answer involves half the architecture, your design is working against you.
+
+---
+
+## 7. Use a simple "would we regret going simpler" test
+
+For each major component, ask: *"What happens if we remove this and replace it with a simpler version?"*
+
+**Examples:**
+1. Replace a complex event bus with direct HTTP calls between two services
+2. Replace a third store with just using the main database
+3. Replace a sophisticated plugin framework with a straight function call
+
+- If the only cost is "we will have to work a bit later if we add more complexity" → you might be over-engineered
+- If the cost is "we would not meet a current requirement or risk tolerance" → the complexity is earned
+
+---
+
+## 8. Over-Engineering Checklist
+
+You are probably over-engineered if:
+
+1. The architecture looks like it belongs to a company 10x your size
+2. Most "reasons" start with "one day" rather than "today we have this problem"
+3. You have adopted many patterns from large-scale talks without having their scale
+4. Explaining the design feels like explaining a research paper rather than a product
+5. Small changes require touching many systems
+
+> If several of these are true, the next design iteration should be about **removal, consolidation, and simplification** — not about adding more cleverness.

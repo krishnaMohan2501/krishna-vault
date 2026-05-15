@@ -1,0 +1,158 @@
+---
+title: How to Spot Over-Engineering
+date: 2026-05-15
+---
+
+# How to Spot Over-Engineering
+
+Over-engineering is when the cost of building and operating a system grows faster than the value or risk it is actually handling. You see a lot of *"in case we need it someday"* and very little *"this solves a problem we have right now"*.
+
+It is one of the most common traps in system design — and it usually does not feel like a mistake when it is happening. It feels like thoroughness.
+
+Here is how to catch it before it catches you.
+
+---
+
+## Think in three axes
+
+Before anything else, evaluate your system across three dimensions:
+
+- **Complexity** — how many moving parts, abstractions, and dependencies exist
+- **Actual scale and risk** — what your real traffic, data, and failure modes look like today
+- **Team capacity** — how many engineers own and operate this system
+
+If complexity is far ahead of the other two, you are over-engineered.
+
+---
+
+## 1. The diagram-to-requirement ratio
+
+Pull up your architecture diagram and put it next to your feature list.
+
+**Warning signs:**
+- The feature set is small but the diagram has a dozen services, message buses, and custom frameworks
+- You have more infrastructure components than actual business components
+- Every basic concern has its own service — auth, user profiles, notifications, orchestration — for what is essentially a tiny product
+
+Ask yourself: *"If a small startup rebuilt this in a month, would they draw this many boxes?"*
+
+If your diagram looks like it belongs to a large tech company but your problem is tiny, you have drifted into **architecture theater**.
+
+---
+
+## 2. Scale assumptions vs reality
+
+Over-engineering almost always hides behind imaginary scale.
+
+**Ask honestly:**
+- Traffic: Are you really seeing tens of thousands of RPS, or a few hundred at peak?
+- Data: Do you truly need sharding on day one, or would a single well-tuned database last you years?
+- Teams: Do you have thirty teams, or three engineers who own everything?
+
+**A rough heuristic to keep in mind:**
+- If one database with read replicas can carry your next 12–18 months, sharding early is overkill
+- If a single codebase with clean modular boundaries fits your team size, splitting into many microservices is probably over-engineered
+
+Build for the scale you have, with room to grow — not for the scale you dream about.
+
+---
+
+## 3. Technology tourism
+
+Sometimes over-engineering is not about solving a harder problem. It is about wanting to use interesting tools.
+
+**Red flags:**
+- *"We need a message bus"* — with no actual async workflow requirement
+- *"Let's go event-sourced"* — when the business does not need event history or replays
+- *"We should try CQRS"* — on a simple CRUD backend
+- Every service has its own database type, "optimised" for its use case, making operations a nightmare for everyone
+
+For every extra technology you bring in, ask one question: *"What concrete failure or limitation does this remove for us in the next year?"*
+
+If nobody can answer that clearly, the component is probably decorative.
+
+---
+
+## 4. "One day" vs "today"
+
+Listen to how your team justifies design decisions. Over-engineering is almost always dressed up in future hypotheticals.
+
+**Sounds like:**
+- *"One day we might need to support 10 different payment providers"*
+- *"What if we need plug-and-play modules for third parties in 2 years?"*
+
+**Healthy forward thinking** adds extension points where they are cheap and keeps the current path simple.
+
+**Over-engineering** builds complex plugin systems, abstraction layers, and super-generic APIs long before a second implementation even exists.
+
+The test: *"Do we have at least two real use cases that need this abstraction today?"*
+
+If not — keep it simple and refactor when the second real use case actually appears.
+
+---
+
+## 5. Can you explain it in 5 minutes?
+
+If you cannot walk a competent engineer through your architecture in five minutes and have them nod along, it is probably too clever for its own good.
+
+**Try this:**
+- Whiteboard the system for a teammate who was not in any of the design meetings
+- Count how many times you say *"we added this layer in case we need X later"*
+- Watch for confusion on the most basic flows
+
+A healthy design can be rich internally but should always have a simple story at the top:
+
+> *"Requests come in here. We do these three things. We store it here. This part is cached."*
+
+If you cannot produce that sentence, complexity has won.
+
+---
+
+## 6. Does your design slow you down?
+
+Over-engineering shows up most clearly when you try to change things.
+
+**Signals to watch:**
+- Simple features require touching multiple services, repos, or configs
+- Deployments are complicated with many interdependent pipelines
+- Local development requires several containers and emulators just to run a basic flow
+
+A practical test: *"How many steps does it take to add a simple field to a user profile, end to end?"*
+
+If the answer involves half your architecture, the design is working against you — not for you.
+
+---
+
+## 7. The "would we regret going simpler" test
+
+For each major component, ask: *"What happens if we replace this with something simpler?"*
+
+**Examples:**
+- Replace a complex event bus with direct HTTP calls between two services
+- Replace a separate data store with just the main database
+- Replace a sophisticated plugin framework with a plain function call
+
+Two possible outcomes:
+
+- **"We'd have to refactor later if complexity grows"** → you are probably over-engineered
+- **"We'd fail a real current requirement"** → the complexity is earned, keep it
+
+This is the clearest signal. If the only argument for complexity is future work, cut it now.
+
+---
+
+## The over-engineering checklist
+
+You are probably over-engineered if:
+
+1. The architecture looks like it belongs to a company 10x your size
+2. Most design justifications start with *"one day"* rather than *"today we have this problem"*
+3. You have adopted patterns from large-scale conference talks without having their scale
+4. Explaining the design feels like defending a research paper, not describing a product
+5. Small changes require touching many systems
+
+If several of these are true, the next design iteration should be about **removal, consolidation, and simplification** — not about adding more cleverness.
+
+---
+
+The best systems are not the ones with the most components. They are the ones where every component earns its place.
